@@ -23,7 +23,8 @@ class Draw(QWidget):
         self.repaint()
 
     def paintEvent(self,  e:QPaintEvent):
-
+        #Draw situation
+        
         #Create new object
         qp = QPainter(self)
 
