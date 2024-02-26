@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>803</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -53,8 +53,8 @@
     <addaction name="actionClear_All"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuAnalyze"/>
    <addaction name="menuInput"/>
+   <addaction name="menuAnalyze"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -127,6 +127,9 @@
    </property>
   </action>
   <action name="actionPoint_Polygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="images.qrc">
      <normaloff>:/images/icons/pointpol.png</normaloff>:/images/icons/pointpol.png</iconset>
