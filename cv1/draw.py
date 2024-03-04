@@ -20,6 +20,7 @@ class Draw(QWidget):
 
         #Add vertex to polygon
         if self.add_vertex == 1:
+            
             #Create new point
             p = QPointF(x,y)
 
@@ -43,20 +44,19 @@ class Draw(QWidget):
         #Start drawing
         qp.begin(self)
 
-        #Set aatributes
+        #Set graphic attributes
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.yellow)
 
         #Draw polygon
         qp.drawPolygon(self.pol)
         
-        #Set attributes
+        #Set graphic attributes
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.red)
 
         #Draw point
         r = 10
-        qp.drawEllipse
         qp.drawEllipse(int(self.q.x()-r), int(self.q.y()-r), 2*r, 2*r)
 
         #End drawing
