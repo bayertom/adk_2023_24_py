@@ -12,7 +12,7 @@ class Algorithms:
         k = 0
         n = len(pol)
         
-        #Process all vertices
+        #Process all vertices of the polygon
         for i in range(n):
             #Reduce coordinates
             x_ir = pol[i].x() - q.x()
