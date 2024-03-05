@@ -7,7 +7,8 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from algorithms import *
+from io import *
 
 class Ui_MainForm(object):
     def setupUi(self, MainForm):
@@ -100,19 +101,45 @@ class Ui_MainForm(object):
         QtCore.QMetaObject.connectSlotsByName(MainForm)
         
     def openClick(self):
+        
+        io = IO()
         pass    
     
     def windingNumberClick(self):
         pass
     
     def rayCrossingClick(self):
-        pass
+        #Get point and polygon
+        q = self.Canvas.getPoint()
+        pol = self.Canvas.getPolygon()
+        
+        #Create new object
+        a = Algorithms()
+        
+        #Run analysis
+        position = a.getPointPolPosition(q,pol)
+        
+        #Show results
+        mb = QtWidgets.QMessageBox()
+        mb.setWindowTitle("Point q and polygon position")
+        
+        #Inside
+        if position == 1:
+            mb.setText("Point q inside P")
+        
+        #Outside
+        else:
+            mb.setText("Point q outside P")
+        
+        mb.exec()
+        
+        
     
     def pointPolygonClick(self):
         self.Canvas.switchDraw()
     
     def clearAllClick(self):
-        pass
+        self.Canvas.clearAll()
 
 
     def retranslateUi(self, MainForm):

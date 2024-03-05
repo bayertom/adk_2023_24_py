@@ -61,3 +61,26 @@ class Draw(QWidget):
 
         #End drawing
         qp.end()
+        
+        
+    def getPoint(self):
+        #Return point
+        return self.q
+    
+    
+    def getPolygon(self):
+        # Return polygon
+        return self.pol
+    
+    def clearAll(self):
+        #Clear polygon
+        self.pol.clear()
+        
+        #Shift q outside the view
+        self.q.setX(-100)
+        self.q.setY(-100)
+        
+        #Repaint screen
+        self.repaint()
+        
+    
