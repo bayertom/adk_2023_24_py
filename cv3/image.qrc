@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>images/icons/pca.png</file>
     <file>images/icons/about.png</file>
     <file>images/icons/ch.png</file>
     <file>images/icons/clear.png</file>

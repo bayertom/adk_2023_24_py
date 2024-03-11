@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>1013</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -104,6 +104,10 @@
    </property>
   </action>
   <action name="actionPCA">
+   <property name="icon">
+    <iconset resource="image.qrc">
+     <normaloff>:/images/icons/pca.png</normaloff>:/images/icons/pca.png</iconset>
+   </property>
    <property name="text">
     <string>PCA</string>
    </property>
