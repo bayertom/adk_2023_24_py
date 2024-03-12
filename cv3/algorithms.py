@@ -40,7 +40,6 @@ class Algorithms:
     
     def get2VectorsAngle(self, p1:QPointF, p2:QPointF, p3:QPointF, p4:QPointF):
         #Angle between two vectors
-        #Vectors u, v
         ux = p2.x() - p1.x()
         uy = p2.y() - p1.y()
         
@@ -51,8 +50,8 @@ class Algorithms:
         dot = ux*vx + uy*vy
         
         #Norms
-        nu = (ux**2 + uy**2)**(1/2)
-        nv = (vx**2 + vy**2)**(1/2)
+        nu = (ux**2 + uy**2)**0.5
+        nv = (vx**2 + vy**2)**0.5
         
         return acos(dot/(nu*nv))
     
@@ -68,7 +67,7 @@ class Algorithms:
         
         #Initial segment
         pj = q
-        pj1 = QPoint(s.x(), q.y())
+        pj1 = QPointF(s.x(), q.y())
         
         # Add to CH
         ch.append(pj)
@@ -105,7 +104,7 @@ class Algorithms:
     def createMMB(self, pol:QPolygonF):
         # Create min max box and compute its area
 
-        #POints with extreme coordinates        
+        #Points with extreme coordinates        
         p_xmin = min(pol, key = lambda k: k.x())
         p_xmax = max(pol, key = lambda k: k.x())
         p_ymin = min(pol, key = lambda k: k.y())
