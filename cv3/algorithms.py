@@ -126,7 +126,7 @@ class Algorithms:
         return mmb, area
     
     def LH(self, pol:QPolygonF):
-        #Compute area using lh formulas
+        #Compute area using LH formula
         area = 0
         n = len(pol)
         
