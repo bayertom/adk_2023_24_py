@@ -1,6 +1,7 @@
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
+from math import *
 
 class Algorithms:
     
@@ -38,6 +39,7 @@ class Algorithms:
         #Outside
         return 0
     
+    
     def get2VectorsAngle(self, p1:QPointF, p2:QPointF, p3:QPointF, p4:QPointF):
         #Angle between two vectors
         ux = p2.x() - p1.x()
@@ -54,6 +56,7 @@ class Algorithms:
         nv = (vx**2 + vy**2)**0.5
         
         return acos(dot/(nu*nv))
+    
     
     def createCH(self, pol:QPolygonF):
         #Create Convex Hull using Jarvis Scan
@@ -88,7 +91,7 @@ class Algorithms:
                     omega_max = omega
                     index_max = i
                     
-            #Add point to convex hull
+            #Add point to the convex hull
             ch.append(pol[index_max])
             
             #Reasign points
@@ -100,6 +103,7 @@ class Algorithms:
                 break
             
         return ch
+    
     
     def createMMB(self, pol:QPolygonF):
         # Create min max box and compute its area
@@ -120,22 +124,18 @@ class Algorithms:
         mmb = QPolygonF([v1, v2, v3, v4])
         
         #Area of MMB
-        area = (v2.x()-v1.x()) * (v3.y()-v2.y())
+        area = (v2.x() - v1.x()) * (v3.y() - v2.y())
         
         return mmb, area
     
+    
     def LH(self, pol:QPolygonF):
-        #Compute area using LH formula
+        #Compute polygon area using LH formula
         area = 0
         n = len(pol)
         
         #Compute area
-        for (i in range(n)):
-            area = area + pol[i].x()*(pol[(i+1)%n].y() - pol[(i-1+n)%n].y())
+        for i in range(n):
+            area = area + pol[i].x() * (pol[(i + 1)%n].y() - pol[(i - 1 + n)%n].y())
             
         return abs(area)/2
-        
-        
-                
-                
-        

@@ -8,6 +8,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 from algorithms import *
+from draw import Draw
 from io import *
 
 class Ui_MainForm(object):
@@ -100,13 +101,16 @@ class Ui_MainForm(object):
         self.actionExit.triggered.connect(MainForm.close) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainForm)
         
+        
     def openClick(self):
         
         io = IO()
         pass    
     
+    
     def windingNumberClick(self):
         pass
+    
     
     def rayCrossingClick(self):
         #Get point and polygon
@@ -131,12 +135,13 @@ class Ui_MainForm(object):
         else:
             mb.setText("Point q outside P")
         
+        #Show message box
         mb.exec()
         
         
-    
     def pointPolygonClick(self):
         self.Canvas.switchDraw()
+    
     
     def clearAllClick(self):
         self.Canvas.clearAll()
@@ -161,7 +166,7 @@ class Ui_MainForm(object):
         self.actionPoint_Polygon.setToolTip(_translate("MainForm", "Input Point or Polygon"))
         self.actionClear_All.setText(_translate("MainForm", "Clear data"))
         self.actionClear_All.setToolTip(_translate("MainForm", "Clear all data "))
-from draw import Draw
+
 
 
 if __name__ == "__main__":
