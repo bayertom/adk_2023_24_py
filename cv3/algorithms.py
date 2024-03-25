@@ -139,3 +139,111 @@ class Algorithms:
             area = area + pol[i].x() * (pol[(i + 1)%n].y() - pol[(i - 1 + n)%n].y())
             
         return abs(area)/2
+
+
+    def rotate(self, pol:QPolygonF, sig:float):
+        #Rotate polygon according to a given angle
+        pol_rot = QPolygonF()
+
+        #Process all polygon vertices
+        for i in range(len(pol)):
+
+            #Rotate point
+            x_rot = pol[i].x() * cos(sig) - pol[i].y() * sin(sig)
+            y_rot = pol[i].x() * sin(sig) + pol[i].y() * cos(sig)
+
+            #Create QPoint
+            vertex = QPointF(x_rot, y_rot)
+
+            # Add vertex to rotated polygon
+            pol_rot.append(vertex)
+
+        return pol_rot
+
+
+    def mbr(self, pol: QPolygonF):
+        # Create minimum area enclosing rectangle
+
+        #Create convex hull
+        ch = self.createCH(pol)
+
+        #Get minmax box, area and sigma
+        mmb_min, area_min = self.createMMB(ch)
+        sigma_min = 0
+
+        # Process all segments of ch
+        for i in range(len(ch)-1):
+            # Compute sigma
+            dx = ch[i+1].x() - ch[i].x()
+            dy = ch[i+1].y() - ch[i].y()
+            sigma = atan2(dy,dx)
+
+            #Rotate convex hull by sigma
+            ch_rot = self.rotate(ch, -sigma)
+
+            #Find min-max box over rotated ch
+            mmb, area = self.createMMB(ch_rot)
+
+            #Actualize minimum area
+            if area < area_min:
+                area_min = area
+                mmb_min = mmb
+                sigma_min = sigma
+
+        #Rotate minmax box
+        er = self.rotate(mmb_min, sigma_min)
+
+        #Resize rectangle
+        er_r = self.resize(er, pol)
+
+        return er_r
+
+
+    def resize(self, er: QPolygonF, pol:QPolygonF):
+        #Building area
+        Ab = abs(self.LH(pol))
+
+        #Enclosing rectangle area
+        A = abs(self.LH(er))
+
+        # Fraction of Ab and A
+        k = Ab/A
+
+        #Center of mass
+        x_t = (er[0].x() + er[1].x() + er[2].x() + er[3].x())/4
+        y_t = (er[0].y() + er[1].y() + er[2].y() + er[3].y())/4
+
+        #Vectors
+        u1_x = er[0].x() - x_t
+        u2_x = er[1].x() - x_t
+        u3_x = er[2].x() - x_t
+        u4_x = er[3].x() - x_t
+        u1_y = er[0].y() - y_t
+        u2_y = er[1].y() - y_t
+        u3_y = er[2].y() - y_t
+        u4_y = er[3].y() - y_t
+
+        #Coordinates of new vertices
+        v1_x = x_t + sqrt(k) * u1_x
+        v1_y = y_t + sqrt(k) * u1_y
+
+        v2_x = x_t + sqrt(k) * u2_x
+        v2_y = y_t + sqrt(k) * u2_y
+
+        v3_x = x_t + sqrt(k) * u3_x
+        v3_y = y_t + sqrt(k) * u3_y
+
+        v4_x = x_t + sqrt(k) * u4_x
+        v4_y = y_t + sqrt(k) * u4_y
+
+        #Create new vertices
+        v1 = QPointF(v1_x, v1_y)
+        v2 = QPointF(v2_x, v2_y)
+        v3 = QPointF(v3_x, v3_y)
+        v4 = QPointF(v4_x, v4_y)
+
+        #Create rectangle
+        er_r = QPolygonF([v1, v2, v3, v4])
+
+        return er_r
+    
