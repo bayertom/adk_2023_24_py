@@ -72,7 +72,7 @@ class Algorithms:
         pj = q
         pj1 = QPointF(s.x(), q.y())
         
-        # Add to CH
+        #Add to CH
         ch.append(pj)
         
         # Find all points of CH
