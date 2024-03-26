@@ -55,7 +55,12 @@ class Algorithms:
         nu = (ux**2 + uy**2)**0.5
         nv = (vx**2 + vy**2)**0.5
         
-        return acos(dot/(nu*nv))
+        arg = dot/(nu*nv)
+        
+        #Correct inteval
+        arg = max(-1, min(1,arg)) 
+        
+        return acos(arg)
     
     
     def createCH(self, pol:QPolygonF):
@@ -144,7 +149,7 @@ class Algorithms:
         return abs(area)/2
 
 
-    def rotate(self, pol:QPolygonF, sig:float):
+    def rotatePolygon(self, pol:QPolygonF, sig:float):
         #Rotate polygon according to a given angle
         pol_rot = QPolygonF()
 
@@ -164,7 +169,7 @@ class Algorithms:
         return pol_rot
 
 
-    def mbr(self, pol: QPolygonF):
+    def createMBR(self, pol: QPolygonF):
         # Create minimum area enclosing rectangle
 
         #Create convex hull
@@ -182,7 +187,7 @@ class Algorithms:
             sigma = atan2(dy,dx)
 
             #Rotate convex hull by sigma
-            ch_rot = self.rotate(ch, -sigma)
+            ch_rot = self.rotatePolygon(ch, -sigma)
 
             #Find min-max box over rotated ch
             mmb, area = self.createMMB(ch_rot)
@@ -194,15 +199,15 @@ class Algorithms:
                 sigma_min = sigma
 
         #Rotate minmax box
-        er = self.rotate(mmb_min, sigma_min)
+        er = self.rotatePolygon(mmb_min, sigma_min)
 
         #Resize rectangle
-        er_r = self.resize(er, pol)
+        er_r = self.resizeRectangle(er, pol)
 
         return er_r
 
 
-    def resize(self, er: QPolygonF, pol:QPolygonF):
+    def resizeRectangle(self, er: QPolygonF, pol:QPolygonF):
         #Building area
         Ab = abs(self.LH(pol))
 

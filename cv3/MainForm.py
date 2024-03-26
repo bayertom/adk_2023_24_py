@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         
         #Simplification
         a = Algorithms()
-        res = a.createCH(building)
+        res = a.createMBR(building)
         
         #Set results
         self.Canvas.setER(res)

@@ -7,7 +7,6 @@ class Draw(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.building = QPolygonF()
-        self.ch = QPolygonF()
         self.er = QPolygonF()
        
           
@@ -41,13 +40,6 @@ class Draw(QWidget):
 
         #Draw building
         qp.drawPolygon(self.building)
-        
-        #Set graphic attributes: convex hull
-        qp.setPen(Qt.GlobalColor.blue)
-        qp.setBrush(Qt.GlobalColor.transparent)
-
-        #Draw convex hull
-        qp.drawPolygon(self.ch)
         
         #Set graphic attributes: enclosing rectangle
         qp.setPen(Qt.GlobalColor.red)
