@@ -11,6 +11,7 @@ class Algorithms:
     def __init__(self):
         pass
     
+    
     def getPointPolPosition(self, q:QPointF, pol:QPolygonF):
         #Point and polygon position, ray crossing algorithm
         k = 0
@@ -58,9 +59,8 @@ class Algorithms:
         nu = (ux**2 + uy**2)**0.5
         nv = (vx**2 + vy**2)**0.5
         
+        #Correct interval
         arg = dot/(nu*nv)
-        
-        #Correct inteval
         arg = max(-1, min(1,arg)) 
         
         return acos(arg)
@@ -178,12 +178,13 @@ class Algorithms:
         #Create convex hull
         ch = self.createCH(pol)
 
-        #Get minmax box, area and sigma
+        #Get min-max box, area and sigma
         mmb_min, area_min = self.createMMB(ch)
         sigma_min = 0
 
         # Process all segments of ch
         for i in range(len(ch)-1):
+            
             # Compute sigma
             dx = ch[i+1].x() - ch[i].x()
             dy = ch[i+1].y() - ch[i].y()
@@ -192,7 +193,7 @@ class Algorithms:
             #Rotate convex hull by sigma
             ch_rot = self.rotatePolygon(ch, -sigma)
 
-            #Find min-max box over rotated ch
+            #Find min-max box over rotated convex hull
             mmb, area = self.createMMB(ch_rot)
 
             #Actualize minimum area
@@ -201,7 +202,7 @@ class Algorithms:
                 mmb_min = mmb
                 sigma_min = sigma
 
-        #Rotate minmax box
+        #Rotate min-max box
         er = self.rotatePolygon(mmb_min, sigma_min)
 
         #Resize rectangle
@@ -258,6 +259,7 @@ class Algorithms:
 
         return er_r
     
+    
     def createERPCA (self, pol:QPolygonF):
         # Create enclosing rectangle using PCA
         x = list(QPointF)
@@ -274,6 +276,6 @@ class Algorithms:
         #Covariance matrix
         C = cov(A)    
         
-        #Singular value decompoisition
+        #Singular value decomposition
         [U, S, V] = svd(C)
         

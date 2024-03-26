@@ -56,6 +56,7 @@ class Draw(QWidget):
         # Return building
         return self.building
     
+    
     def setER(self, er:QPolygonF):
         self.er = er
     

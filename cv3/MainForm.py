@@ -130,7 +130,6 @@ class Ui_MainWindow(object):
     def clearAllClick(self):
         pass
     
-    
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
