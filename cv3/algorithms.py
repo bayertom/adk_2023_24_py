@@ -2,6 +2,9 @@ from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 from math import *
+from numpy import *
+from numpy.linalg import *  #scipy.linalg
+
 
 class Algorithms:
     
@@ -255,3 +258,22 @@ class Algorithms:
 
         return er_r
     
+    def createERPCA (self, pol:QPolygonF):
+        # Create enclosing rectangle using PCA
+        x = list(QPointF)
+        y = list(QPointF)
+        
+        #Add x,y coordinates to the list
+        for p in pol:
+            x.append(p.x())
+            y.append(p.y())
+            
+        #Convert to matrix
+        A = array([x,y])
+        
+        #Covariance matrix
+        C = cov(A)    
+        
+        #Singular value decompoisition
+        [U, S, V] = svd(C)
+        
