@@ -83,13 +83,16 @@ class Algorithms:
             
             #Browse all points
             for i in range(len(pol)):
-                #Compute omega
-                omega = self.get2VectorsAngle(pj, pj1, pj, pol[i])
-        
-                #Actualize maximum
-                if(omega>omega_max):
-                    omega_max = omega
-                    index_max = i
+                
+                if pj != pol[i]:
+                    
+                    #Compute omega
+                    omega = self.get2VectorsAngle(pj, pj1, pj, pol[i])
+            
+                    #Actualize maximum
+                    if(omega>omega_max):
+                        omega_max = omega
+                        index_max = i
                     
             #Add point to the convex hull
             ch.append(pol[index_max])

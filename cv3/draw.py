@@ -7,8 +7,10 @@ class Draw(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.building = QPolygonF()
+        self.ch = QPolygonF()
+        self.er = QPolygonF()
        
-    
+          
     def mousePressEvent(self, e:QMouseEvent):
         #Get cursor position
         x = e.position().x()
@@ -22,6 +24,7 @@ class Draw(QWidget):
            
         #Repaint screen
         self.repaint()
+        
 
     def paintEvent(self,  e:QPaintEvent):
         #Draw situation
@@ -32,20 +35,37 @@ class Draw(QWidget):
         #Start drawing
         qp.begin(self)
 
-        #Set graphic attributes
+        #Set graphic attributes: building
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.yellow)
 
         #Draw building
         qp.drawPolygon(self.building)
         
+        #Set graphic attributes: convex hull
+        qp.setPen(Qt.GlobalColor.blue)
+        qp.setBrush(Qt.GlobalColor.transparent)
+
+        #Draw convex hull
+        qp.drawPolygon(self.ch)
+        
+        #Set graphic attributes: enclosing rectangle
+        qp.setPen(Qt.GlobalColor.red)
+        qp.setBrush(Qt.GlobalColor.transparent)
+
+        #Draw enclosing rectangle
+        qp.drawPolygon(self.er)
+        
         #End drawing
         qp.end()
         
     
-    def getPolygon(self):
-        # Return polygon
+    def getBuilding(self):
+        # Return building
         return self.building
+    
+    def setER(self, er:QPolygonF):
+        self.er = er
     
     
     def clearAll(self):
