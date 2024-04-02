@@ -262,8 +262,8 @@ class Algorithms:
     
     def createERPCA (self, pol:QPolygonF):
         # Create enclosing rectangle using PCA
-        x = list(QPointF)
-        y = list(QPointF)
+        x = []
+        y = []
         
         #Add x,y coordinates to the list
         for p in pol:
@@ -278,4 +278,21 @@ class Algorithms:
         
         #Singular value decomposition
         [U, S, V] = svd(C)
+        
+        #Compute sigma
+        sigma = atan2(V[0][1], V[0][0])
+        
+        #Rotate polygon
+        pol_rot = self.rotatePolygon(pol, -sigma)
+        
+        #Find min-max box over rotated building
+        mmb, area = self.createMMB(pol_rot)
+        
+        #Rotate min-max box
+        er = self.rotatePolygon(mmb, sigma)
+
+        #Resize rectangle
+        er_r = self.resizeRectangle(er, pol)
+        
+        return er_r
         

@@ -120,7 +120,18 @@ class Ui_MainWindow(object):
         
 
     def pcaClick(self):
-        pass
+        #Get building
+        building = self.Canvas.getBuilding()
+        
+        #Simplification
+        a = Algorithms()
+        res = a.createERPCA(building)
+        
+        #Set results
+        self.Canvas.setER(res)
+        
+        #Repaint
+        self.Canvas.repaint()
     
         
     def clearClick(self):
