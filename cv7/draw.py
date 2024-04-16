@@ -1,36 +1,26 @@
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
+from Edge import *
+from QPoint3DF import *
 
 class Draw(QWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.pol = QPolygonF()
-        self.q = QPointF(100, 100)
-        self.add_vertex = True
+        self.points = [] 
+        self.dt = []
     
-    def switchDraw(self):
-        self.add_vertex = not(self.add_vertex)
-
     def mousePressEvent(self, e:QMouseEvent):
         #Get cursor position
         x = e.position().x()
         y = e.position().y()
 
-        #Add vertex to polygon
-        if self.add_vertex == 1:
-            
-            #Create new point
-            p = QPointF(x,y)
+        #Create new point
+        p = QPoint3DF(x,y , 0.0)
 
-            #Add point to polygon
-            self.pol.append(p)
-           
-        #Shift q 
-        else:
-            self.q.setX(x)
-            self.q.setY(y)
+        #Add point to point cloud
+        self.points.append(p)
             
         #Repaint screen
         self.repaint()
@@ -48,39 +38,44 @@ class Draw(QWidget):
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.yellow)
 
-        #Draw polygon
-        qp.drawPolygon(self.pol)
-        
+        #Draw points
+        r = 10
+        for p in self.points:
+            qp.drawEllipse(int(p.x()-r), int(p.y()-r), 2*r, 2*r)
+
         #Set graphic attributes
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.red)
 
+        #Draw Delaunay triangulation
+        
+        #Draw contour lines
+        
+        #Draw slope
+        
+        #Draw aspect
+        
         #Draw point
-        r = 10
-        qp.drawEllipse(int(self.q.x()-r), int(self.q.y()-r), 2*r, 2*r)
-
+       
         #End drawing
         qp.end()
         
         
-    def getPoint(self):
-        #Return point
-        return self.q
+    def getPoints(self):
+        #Return points
+        return self.points
     
-    
-    def getPolygon(self):
-        # Return polygon
-        return self.pol
-    
+      
     def clearAll(self):
-        #Clear polygon
-        self.pol.clear()
-        
-        #Shift q outside the view
-        self.q.setX(-100)
-        self.q.setY(-100)
-        
+        #Clear points
+        self.points.clear()
+                
         #Repaint screen
         self.repaint()
         
     
+    def setDT(self, dt:list[Edge]):
+        #Set DT
+        
+        self.dt = dt
+        
