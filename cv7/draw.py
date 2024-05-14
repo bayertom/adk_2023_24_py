@@ -60,7 +60,7 @@ class Draw(QWidget):
                 slope = t.getSlope()
                 
                 #Compute color
-                RGB = int(255 - slope * 2*255/pi)
+                RGB = int(255 - slope * 510/pi)
                 col = QColor(RGB, RGB, RGB)
                 
                 qp.setBrush(col)

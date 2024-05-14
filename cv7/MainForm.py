@@ -209,7 +209,8 @@ class Ui_MainWindow(object):
         #Repaint
         self.Canvas.repaint()
         
-        #Check 
+        #Check
+        self.actionDT.setChecked(True)
         self.actionContour_lines_2.setChecked(True)
          
    
@@ -236,7 +237,8 @@ class Ui_MainWindow(object):
         #Repaint
         self.Canvas.repaint()
         
-        #Check 
+        #Check
+        self.actionDT.setChecked(True)
         self.actionSlope.setChecked(True)
          
 
