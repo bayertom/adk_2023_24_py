@@ -1,0 +1,11 @@
+release/algorithms.o
+release/draw.o
+release/edge.o
+release/main.o
+release/mainform.o
+release/qpointf3d.o
+release/sortpointsbyx.o
+release/triangle.o
+release/qrc_images.o
+release/moc_draw.o
+release/moc_mainform.o

@@ -6,7 +6,9 @@ from numpy import *
 from numpy.linalg import *  #scipy.linalg
 from QPoint3DF import *
 from Edge import *
-
+from decimal import *
+from Triangle import *
+from numpy import *
 
 class Algorithms:
     
@@ -14,7 +16,7 @@ class Algorithms:
         pass
     
     
-    def getPointPolPosition(self, q:QPointF, pol:QPolygonF):
+    def getPointPolPosition(self, q:QPoint3DF, pol:QPolygonF):
         #Point and polygon position, ray crossing algorithm
         k = 0
         n = len(pol)
@@ -46,7 +48,7 @@ class Algorithms:
         return 0
     
     
-    def get2VectorsAngle(self, p1:QPointF, p2:QPointF, p3:QPointF, p4:QPointF):
+    def get2VectorsAngle(self, p1:QPoint3DF, p2:QPoint3DF, p3:QPoint3DF, p4:QPoint3DF):
         #Angle between two vectors
         ux = p2.x() - p1.x()
         uy = p2.y() - p1.y()
@@ -80,7 +82,7 @@ class Algorithms:
         
         #Initial segment
         pj = q
-        pj1 = QPointF(s.x(), q.y())
+        pj1 = QPoint3DF(s.x(), q.y())
         
         #Add to CH
         ch.append(pj)
@@ -128,10 +130,10 @@ class Algorithms:
         p_ymax = max(pol, key = lambda k: k.y())
         
         #Create vertices
-        v1 = QPointF(p_xmin.x(), p_ymin.y())
-        v2 = QPointF(p_xmax.x(), p_ymin.y())
-        v3 = QPointF(p_xmax.x(), p_ymax.y())
-        v4 = QPointF(p_xmin.x(), p_ymax.y())
+        v1 = QPoint3DF(p_xmin.x(), p_ymin.y())
+        v2 = QPoint3DF(p_xmax.x(), p_ymin.y())
+        v3 = QPoint3DF(p_xmax.x(), p_ymax.y())
+        v4 = QPoint3DF(p_xmin.x(), p_ymax.y())
         
         #Create new polygon
         mmb = QPolygonF([v1, v2, v3, v4])
@@ -166,7 +168,7 @@ class Algorithms:
             y_rot = pol[i].x() * sin(sig) + pol[i].y() * cos(sig)
 
             #Create QPoint
-            vertex = QPointF(x_rot, y_rot)
+            vertex = QPoint3DF(x_rot, y_rot)
 
             # Add vertex to rotated polygon
             pol_rot.append(vertex)
@@ -251,10 +253,10 @@ class Algorithms:
         v4_y = y_t + sqrt(k) * u4_y
 
         #Create new vertices
-        v1 = QPointF(v1_x, v1_y)
-        v2 = QPointF(v2_x, v2_y)
-        v3 = QPointF(v3_x, v3_y)
-        v4 = QPointF(v4_x, v4_y)
+        v1 = QPoint3DF(v1_x, v1_y)
+        v2 = QPoint3DF(v2_x, v2_y)
+        v3 = QPoint3DF(v3_x, v3_y)
+        v4 = QPoint3DF(v4_x, v4_y)
 
         #Create rectangle
         er_r = QPolygonF([v1, v2, v3, v4])
@@ -416,6 +418,7 @@ class Algorithms:
                 dt.append(e2)
                 dt.append(e3)
                 
+                #Update
                 self.updateAEL(e2, ael)
                 self.updateAEL(e3, ael)
                 
@@ -437,5 +440,157 @@ class Algorithms:
         else: 
             ael.append(e)
         
+    
+    def getContourPoint(self, p1:QPoint3DF, p2:QPoint3DF, z:float):
+        #Compute intersection point
+        
+        xb = (p2.x() - p1.x())/(p2.getZ() - p1.getZ())*(z - p1.getZ()) + p1.x()
+        yb = (p2.y() - p1.y())/(p2.getZ() - p1.getZ())*(z - p1.getZ()) + p1.y()
+       
+        return QPoint3DF(xb, yb, z)
+    
+    def CreateCountourLines(self, dt:list[Edge], zmin:float, zmax:float, dz:float):
+        #Create contour lines inside interval zmin, zmax and with step dz
+        contours = []
+        
+        # Process all triangles
+        for i in range(0, len(dt), 3):
+            #Get triangle verticies
+            p1 = dt[i].getStart()
+            p2 = dt[i].getEnd()
+            p3 = dt[i+1].getEnd()
+            
+            #Z of points
+            z1 = p1.getZ()
+            z2 = p2.getZ()
+            z3 = p3.getZ()
+            
+            #Test horizontal plane and triangle intersections
+            for z in arange(zmin, zmax, dz):
+                #Compute height differences
+                dz1 = z - z1
+                dz2 = z - z2
+                dz3 = z - z3
+                
+                #Triangle is coplanar
+                if dz1 == 0 and dz2 == 0 and dz3 == 0:
+                    continue
+                
+                #Edge (1, 2) in plane
+                elif dz1 == 0 and dz2 == 0:
+                    contours.append(dt[i])
+                
+                #Edge (2, 3) in plane
+                elif dz2 == 0 and dz3 == 0:
+                    contours.append(dt[i+1])
+                
+                #Edge (3, 1) in plane
+                elif dz3 == 0 and dz1 == 0:
+                    contours.append(dt[i+2])
+                    
+                # Edges (1,2) & (2,3) intersected by plane
+                elif dz1 * dz2 <= 0 and dz2 * dz3 < 0 or dz1 * dz2 < 0 and dz2 * dz3 <= 0:
+                    #Contour intersections
+                    a = self.getContourPoint(p1,p2,z)
+                    b = self.getContourPoint(p2,p3,z)
+                    
+                    #Create new edge/line
+                    e = Edge(a,b)
+                    
+                    #Add edge to the list
+                    contours.append(e)
+                    
+                # Edges (2,3) & (3,1) intersected by plane
+                elif dz2 * dz3 <= 0 and dz3 * dz1 < 0 or dz2 * dz3 < 0 and dz3 * dz1 <= 0:
+                    #Contour intersections
+                    a = self.getContourPoint(p2,p3,z)
+                    b = self.getContourPoint(p3,p1,z)
+                    
+                    #Create new edge/line
+                    e = Edge(a,b)
+                    
+                    #Add edge to the list
+                    contours.append(e)
+                    
+                # Edges (3,1) & (1,2) intersected by plane
+                elif dz3 * dz1 <= 0 and dz1 * dz2 < 0 or dz3 * dz1 < 0 and dz1 * dz2 <= 0:
+                    #Contour intersections
+                    a = self.getContourPoint(p3,p1,z)
+                    b = self.getContourPoint(p1,p2,z)
+                    
+                    #Create new edge/line
+                    e = Edge(a,b)
+                    
+                    #Add edge to the list
+                    contours.append(e)
+                    
+        return contours
+
+    def getSlope (self, p1:QPoint3DF, p2:QPoint3DF, p3:QPoint3DF):
+        # Compute triangle slope
+        
+        #Vectors
+        ux = p1.x() - p2.x()
+        uy = p1.y() - p2.y()
+        uz = p1.getZ() - p2.getZ()
+        
+        vx = p3.x() - p2.x()
+        vy = p3.y() - p2.y()
+        vz = p3.getZ() - p2.getZ()
+        
+        #Normal vector
+        nx = uy*vz - uz*vy
+        ny = -ux*vz + uz*vx
+        nz = ux*vy - uy*vx
+        
+        #Norm
+        norm = sqrt(nx**2 + ny**2 + nz**2)
+        
+        #Slope
+        return acos(fabs(nz)/norm)
         
         
+    def getAspect (self, p1:QPoint3DF, p2:QPoint3DF, p3:QPoint3DF):
+        # Compute triangle slope
+        
+        #Vectors
+        ux = p1.x() - p2.x()
+        uy = p1.y() - p2.y()
+        uz = p1.getZ() - p2.getZ()
+        
+        vx = p3.x() - p2.x()
+        vy = p3.y() - p2.y()
+        vz = p3.getZ() - p2.getZ()
+        
+        #Normal vector
+        nx = uy*vz - uz*vy
+        ny = -ux*vz + uz*vx
+        
+        #Aspect
+        return atan2(nx, ny)
+    
+    
+    def analyzeDTMSlopeAndAspect(self, dt):
+        #Analyze DTM slope and aspect
+        triangles = []
+
+        # Process all triangles
+        for i in range(0, len(dt), 3):
+            #Get triangle verticies
+            p1 = dt[i].getStart()
+            p2 = dt[i].getEnd()
+            p3 = dt[i+1].getEnd()
+            
+            #Compute slope
+            slope = self.getSlope(p1, p2, p3)
+            
+            #Compute aspect
+            aspect = self.getAspect(p1, p2, p3)
+    
+            #Create triangle
+            triangle = Triangle(p1, p2, p3, slope, aspect)
+            
+            #Add triangle to list
+            triangles.append(triangle)
+            
+        return triangles
